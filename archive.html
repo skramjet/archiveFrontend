@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Archive — Bastrop County Archive</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main>
+
+  <div class="page-hero">
+    <div class="container">
+      <h1>Archive</h1>
+      <p>Search historical documents and census records from Bastrop County.</p>
+    </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Search bar -->
+    <div style="margin-top:2rem;">
+      <div class="archive-search-bar">
+        <input type="text" id="searchInput" placeholder="Search by title, author, keyword…">
+        <button onclick="applyFilters()">Search</button>
+      </div>
+    </div>
+
+    <!-- Tab switcher -->
+    <div class="tab-bar" style="margin-top:1.5rem; margin-bottom:2rem;">
+      <button class="census-year-btn active" id="tab-docs" onclick="switchTab('docs')">Historical Documents</button>
+      <button class="census-year-btn" id="tab-census" onclick="switchTab('census')">Census Data (1850–1950)</button>
+    </div>
+
+    <!-- ── DOCUMENTS TAB ── -->
+    <div id="panel-docs">
+      <div class="archive-layout">
+
+        <!-- Filter sidebar -->
+        <aside class="filter-sidebar">
+          <h3>Filters</h3>
+
+          <div class="filter-group">
+            <label class="filter-label">Publication Year (up to)</label>
+            <input type="range" id="yearFilter" min="1850" max="1950" value="1950">
+            <div class="range-labels"><span>1850</span><span id="yearVal">1950</span></div>
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label">Location</label>
+            <select id="locationFilter">
+              <option value="">All Locations</option>
+              <option>Bastrop City</option>
+              <option>Smithville</option>
+              <option>Elgin</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label class="filter-label">Tags</label>
+            <!-- Repeat .filter-option for each tag in your dataset -->
+            <label class="filter-option">
+              <input type="checkbox" class="tag-filter" value="tag1"> [Tag 1]
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" class="tag-filter" value="tag2"> [Tag 2]
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" class="tag-filter" value="tag3"> [Tag 3]
+            </label>
+            <label class="filter-option">
+              <input type="checkbox" class="tag-filter" value="tag4"> [Tag 4]
+            </label>
+          </div>
+
+          <button class="filter-clear" onclick="clearFilters()">Clear all filters</button>
+        </aside>
+
+        <!-- Results panel -->
+        <section>
+          <div class="results-toolbar">
+            <span class="results-count" id="resultsCount">— documents</span>
+          </div>
+
+          <div id="results">
+
+            <!-- Repeat this block for each document -->
+
+            <article class="result-card doc"
+              data-year=""
+              data-location=""
+              data-tags="[tag1],[tag2]"
+              data-title="[title lowercase]"
+              data-description="[description lowercase]">
+              <h3><a href="#">Document title</a></h3>
+              <div class="result-meta">
+                <span>Year</span>
+                <span>Author</span>
+                <span>Location</span>
+              </div>
+              <p class="result-snippet">Abstract or short description of the document.</p>
+              <div class="tag-list">
+                <span class="tag">Tag 1</span>
+                <span class="tag">Tag 2</span>
+              </div>
+              <div class="result-card__actions">
+                <a href="#" class="btn btn--outline btn--sm">View Document</a>
+                <a href="#" class="btn btn--ghost btn--sm">Cite</a>
+              </div>
+            </article>
+
+            <article class="result-card doc"
+              data-year="[YEAR]"
+              data-location="[LOCATION]"
+              data-tags="[tag1]"
+              data-title="[title lowercase]"
+              data-description="[description lowercase]">
+              <h3><a href="#">Document title</a></h3>
+              <div class="result-meta">
+                <span>Year</span>
+                <span>Author</span>
+                <span>Location</span>
+              </div>
+              <p class="result-snippet">short description.</p>
+              <div class="tag-list">
+                <span class="tag">Tag 1</span>
+              </div>
+              <div class="result-card__actions">
+                <a href="#" class="btn btn--outline btn--sm">View Document</a>
+                <a href="#" class="btn btn--ghost btn--sm">Cite</a>
+              </div>
+            </article>
+
+            <article class="result-card doc"
+              data-year="[YEAR]"
+              data-location="[LOCATION]"
+              data-tags="[tag1],[tag3]"
+              data-title="[title lowercase]"
+              data-description="[description lowercase]">
+              <h3><a href="#">Document title</a></h3>
+              <div class="result-meta">
+                <span>Year</span>
+                <span>Author</span>
+                <span>Location</span>
+              </div>
+              <p class="result-snippet">short description.</p>
+              <div class="tag-list">
+                <span class="tag">Tag 1</span>
+                <span class="tag">Tag 3</span>
+              </div>
+              <div class="result-card__actions">
+                <a href="#" class="btn btn--outline btn--sm">View Document</a>
+                <a href="#" class="btn btn--ghost btn--sm">Cite</a>
+              </div>
+            </article>
+
+          </div>
+
+          <p class="no-results" id="noResults" style="display:none;text-align:center;padding:3rem;color:var(--muted);">
+            No results match your search.
+          </p>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- ── CENSUS TAB ── -->
+    <div id="panel-census" style="display:none; padding-bottom:3rem;">
+
+      <div class="census-years">
+        <button class="census-year-btn active" onclick="selectCensusYear(this,'1850')">1850</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1860')">1860</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1870')">1870</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1880')">1880</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1890')">1890</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1900')">1900</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1910')">1910</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1920')">1920</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1930')">1930</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1940')">1940</button>
+        <button class="census-year-btn" onclick="selectCensusYear(this,'1950')">1950</button>
+      </div>
+
+      <div id="censusContent">
+        <div class="result-card">
+          <h3>1850 Census — Bastrop County, TX</h3>
+          <div class="result-meta">
+            <span>U.S. Federal Census</span>
+            <span>Bastrop County</span>
+          </div>
+          <p class="result-snippet">[Description for the 1850 census dataset.]</p>
+          <div class="result-card__actions" style="margin-top:1rem;">
+            <a href="#" class="btn btn--primary btn--sm">Download CSV</a>
+            <a href="#" class="btn btn--outline btn--sm">Browse Records</a>
+            <a href="#" class="btn btn--ghost btn--sm">Methodology</a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+</main>
+
+<script>
+// Tab switching
+function switchTab(tab) {
+  document.getElementById('panel-docs').style.display   = tab === 'docs'   ? '' : 'none';
+  document.getElementById('panel-census').style.display = tab === 'census' ? '' : 'none';
+  document.getElementById('tab-docs').classList.toggle('active',   tab === 'docs');
+  document.getElementById('tab-census').classList.toggle('active', tab === 'census');
+}
+
+// Census year selector
+function selectCensusYear(btn, year) {
+  document.querySelectorAll('#panel-census .census-year-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('censusContent').innerHTML = `
+    <div class="result-card">
+      <h3>${year} Census — Bastrop County, TX</h3>
+      <div class="result-meta"><span>U.S. Federal Census</span><span>Bastrop County</span></div>
+      <p class="result-snippet">[Description for the ${year} census dataset.]</p>
+      <div class="result-card__actions" style="margin-top:1rem;">
+        <a href="#" class="btn btn--primary btn--sm">Download CSV</a>
+        <a href="#" class="btn btn--outline btn--sm">Browse Records</a>
+        <a href="#" class="btn btn--ghost btn--sm">Methodology</a>
+      </div>
+    </div>`;
+}
+
+// Filters
+const yearSlider = document.getElementById('yearFilter');
+const yearLabel  = document.getElementById('yearVal');
+if (yearSlider) yearSlider.addEventListener('input', () => { yearLabel.textContent = yearSlider.value; applyFilters(); });
+document.getElementById('locationFilter')?.addEventListener('change', applyFilters);
+document.getElementById('searchInput')?.addEventListener('input', applyFilters);
+document.querySelectorAll('.tag-filter').forEach(c => c.addEventListener('change', applyFilters));
+
+function applyFilters() {
+  const maxYear  = parseInt(yearSlider?.value || 9999);
+  const loc      = document.getElementById('locationFilter')?.value || '';
+  const tags     = Array.from(document.querySelectorAll('.tag-filter:checked')).map(c => c.value);
+  const q        = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
+  const docs     = document.querySelectorAll('.doc');
+  let visible    = 0;
+
+  docs.forEach(doc => {
+    let show = true;
+    if (parseInt(doc.dataset.year) > maxYear) show = false;
+    if (loc && doc.dataset.location !== loc) show = false;
+    if (tags.length && !tags.some(t => doc.dataset.tags.includes(t))) show = false;
+    if (q && !doc.dataset.title.includes(q) && !doc.dataset.description.includes(q)) show = false;
+    doc.style.display = show ? '' : 'none';
+    if (show) visible++;
+  });
+
+  document.getElementById('resultsCount').textContent = `${visible} document${visible !== 1 ? 's' : ''}`;
+  document.getElementById('noResults').style.display = visible === 0 ? '' : 'none';
+}
+
+function clearFilters() {
+  if (yearSlider) { yearSlider.value = yearSlider.max; yearLabel.textContent = yearSlider.max; }
+  document.getElementById('locationFilter').value = '';
+  document.getElementById('searchInput').value = '';
+  document.querySelectorAll('.tag-filter').forEach(c => c.checked = false);
+  applyFilters();
+}
+
+// Init count
+applyFilters();
+</script>
+
+
+<script src="shell.js"></script>
+<script>renderShell('Archive');</script>
+</body>
+</html>

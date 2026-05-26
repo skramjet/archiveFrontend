@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home — Bastrop County Archive</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<main>
+
+  <!-- ── carousel ── -->
+  <div class="carousel-wrap" id="carousel">
+    <div class="carousel-track" id="carouselTrack">
+
+      <div class="carousel-slide">
+        <img class="slide-img" src="bastrop-birdseye.jpg" alt="New Map Methodologies">
+        <div class="carousel-caption">
+          <span class="tag tag--rust">Announcements</span>
+          <h2>New Map Methodologies</h2>
+          <p>We've developed new map methodologies available for download.</p>
+        </div>
+      </div>
+
+      <div class="carousel-slide">
+        <img class="slide-img" src="bccaacc-frontsign.jpeg" alt="New Map Methodologies">
+        <div class="carousel-caption">
+          <span class="tag tag--rust">Logistical</span>
+          <h2>New Hours</h2>
+          <p>Hours have changed for the Bastrop County African American Cultural Center.</p>
+        </div>
+      </div>
+
+      <div class="carousel-slide">
+        <img class="slide-img" src="bccaacc-people.jpg" alt="New Map Methodologies">
+        <div class="carousel-caption">
+          <span class="tag tag--rust">Logistical</span>
+          <h2>Upcoming Meeting</h2>
+          <p>Join us for our monthly meeting to discuss upcoming projects and initiatives.</p>
+        </div>
+      </div>
+
+    </div>
+    <button class="carousel-btn prev" onclick="carouselMove(-1)" aria-label="Previous">&#8249;</button>
+    <button class="carousel-btn next" onclick="carouselMove(1)" aria-label="Next">&#8250;</button>
+    <div class="carousel-dots" id="carouselDots"></div>
+  </div>
+
+
+  <!-- ── LATEST BLOG POSTS ── -->
+  <div class="container">
+    <section class="home-section">
+      <div class="section-header">
+        <h2>Latest from the Blog</h2>
+        <a href="blog.html" class="btn btn--outline btn--sm">View All Posts</a>
+      </div>
+
+      <div class="blog-grid">
+
+        <!-- Card 1 -->
+        <article class="blog-card">
+          <div class="blog-card__img-ph ph">blog_image_1</div>
+          <div class="blog-card__body">
+            <p class="blog-card__meta">4/12/25</p>
+            <h3 class="blog-card__title"><a href="#">New Map Methodologies</a></h3>
+            <p class="blog-card__excerpt">We've developed new map methodologies available for download.</p>
+            <div class="blog-card__footer">
+              <span class="tag">Announcements</span>
+              <a href="#" class="btn btn--ghost btn--sm">Read more →</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="blog-card">
+          <div class="blog-card__img-ph ph">blog_image_2</div>
+          <div class="blog-card__body">
+            <p class="blog-card__meta">4/19/25</p>
+            <h3 class="blog-card__title"><a href="#">New Hours</a></h3>
+            <p class="blog-card__excerpt">Hours have changed for the Bastrop County African American Cultural Center.</p>
+            <div class="blog-card__footer">
+              <span class="tag">Announcements</span>
+              <a href="#" class="btn btn--ghost btn--sm">Read more →</a>
+            </div>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="blog-card">
+          <div class="blog-card__img-ph ph">blog_image_3</div>
+          <div class="blog-card__body">
+            <p class="blog-card__meta">4/26/25</p>
+            <h3 class="blog-card__title"><a href="#">Community Event</a></h3>
+            <p class="blog-card__excerpt">Join us for our community event celebrating local history.</p>
+            <div class="blog-card__footer">
+              <span class="tag">Announcements</span>
+              <a href="#" class="btn btn--ghost btn--sm">Read more →</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+<!-- ── QUICK LINKS ── -->
+<section class="home-section" style="padding-top:0;">
+  <div class="section-header">
+    <h2>Explore the Archive</h2>
+  </div>
+  <div style="display:flex; flex-direction:column; gap:1rem;">
+    <a href="archive.html" class="quick-card" style="display:flex; align-items:center; min-height:140px;">
+      <img src="census-scan.jpg" alt="Documents" style="width:200px; height:140px; object-fit:cover; margin-right:2rem; flex-shrink:0;">
+      <div>
+        <span class="tag tag--rust">Documents</span>
+        <h3>Historical Text Archive</h3>
+        <p>The document collection — scope, subjects covered, how to use it.</p>
+      </div>
+    </a>
+    <a href="archive.html" class="quick-card" style="display:flex; align-items:center; min-height:140px;">
+      <img src="bastrop-milemarker.jpg" alt="Census" style="width:200px; height:140px; object-fit:cover; margin-right:2rem; flex-shrink:0;">
+      <div>
+        <span class="tag tag--rust">Census</span>
+        <h3>Census Database, 1850–1950</h3>
+        <p>The census data.</p>
+      </div>
+    </a>
+  </div>
+</section>
+
+</div>
+
+</main>
+
+<script>
+let cur = 0;
+const track = document.getElementById('carouselTrack');
+const slides = track.children;
+const dotsWrap = document.getElementById('carouselDots');
+const total = slides.length;
+
+for (let i = 0; i < total; i++) {
+  const d = document.createElement('button');
+  d.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+  d.setAttribute('aria-label', 'Slide ' + (i+1));
+  d.onclick = () => goTo(i);
+  dotsWrap.appendChild(d);
+}
+function goTo(n) {
+  cur = (n + total) % total;
+  track.style.transform = `translateX(-${cur * 100}%)`;
+  document.querySelectorAll('.carousel-dot').forEach((d, i) => d.classList.toggle('active', i === cur));
+}
+function carouselMove(dir) { goTo(cur + dir); }
+setInterval(() => carouselMove(1), 5500);
+</script>
+
+
+<script src="shell.js"></script>
+<script>renderShell('Home');</script>
+</body>
+</html>
