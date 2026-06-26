@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document View — Bastrop County Archive</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <style>
+
+    .doc-layout {
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 2rem;
+      padding: 2.5rem 0 4rem;
+      align-items: start;
+    }
+
+    /* ── Doc title/author ── */
+    .doc-title {
+      font-family: var(--font-d);
+      font-size: 1.9rem; font-weight: 700;
+      color: var(--ink); line-height: 1.3;
+      margin-bottom: .35rem;
+    }
+    .doc-author {
+      font-size: 1rem; color: var(--muted);
+      font-style: italic; margin-bottom: 1.5rem;
+    }
+
+    /* ── PDF area ── */
+    .pdf-embed { width: 100%; height: 680px; border: none; display: block; }
+    .pdf-placeholder {
+      width: 100%; height: 680px;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center; gap: .75rem;
+      background: repeating-linear-gradient(
+        -45deg, rgba(0,0,0,.02) 0px, rgba(0,0,0,.02) 4px,
+        transparent 4px, transparent 12px
+      );
+      border: 1.5px dashed var(--border);
+      color: var(--muted); font-family: var(--font-m);
+      font-size: .78rem; letter-spacing: .06em;
+      text-align: center;
+    }
+
+    /* ── Sidebar ── */
+    .doc-sidebar { display: flex; flex-direction: column; gap: .3rem; }
+
+    /* ── Top action bar (cite + actions) ── */
+    .sidebar-actions {
+      display: flex; gap: .5rem; flex-wrap: wrap;
+      margin-bottom: .75rem;
+    }
+    .sidebar-actions .btn { flex: 1; justify-content: center; font-size: .8rem; padding: .5rem .75rem; }
+
+    /* ── Tags ── */
+    .tag-list { display: flex; flex-wrap: wrap; gap: .4rem; }
+    .sidebar-tags {
+      background: var(--paper); border: 1px solid var(--border);
+      padding: .85rem 1.1rem; margin-bottom: .3rem;
+    }
+    .sidebar-tags__label {
+      font-family: var(--font-m); font-size: .7rem;
+      letter-spacing: .04em;
+      color: var(--muted); margin-bottom: .55rem; display: block;
+    }
+
+    /* ── Accordion ── */
+    .accordion { border: 1px solid var(--border); background: var(--paper); }
+    .accordion + .accordion { border-top: none; }
+    .accordion__trigger {
+      width: 100%; display: flex; align-items: center;
+      justify-content: space-between;
+      padding: .75rem 1.1rem;
+      background: none; border: none; cursor: pointer;
+      font-family: var(--font-m); font-size: .72rem;
+      letter-spacing: .04em;
+      color: var(--ink-soft); text-align: left;
+      transition: background .15s;
+    }
+    .accordion__trigger:hover { background: var(--sand); }
+    .accordion__arrow {
+      font-size: .6rem; color: var(--muted);
+      transition: transform .2s ease; flex-shrink: 0;
+    }
+    .accordion.open .accordion__arrow { transform: rotate(180deg); }
+    .accordion__body {
+      display: none;
+      border-top: 1px solid var(--border);
+      padding: 1rem 1.1rem;
+    }
+    .accordion.open .accordion__body { display: block; }
+
+    /* ── Detail table ── */
+    .detail-table { width: 100%; border-collapse: collapse; font-size: .84rem; color: var(--ink-soft); }
+    .detail-table td { padding: .5rem .6rem; }
+    .detail-table tr { border-bottom: 1px solid var(--border); }
+    .detail-table tr:last-child { border-bottom: none; }
+    .detail-table .label {
+      font-family: var(--font-m); font-size: .68rem;
+      letter-spacing: .04em;
+      color: var(--muted); width: 38%;
+    }
+
+    /* ── Access notices ── */
+    .access-notice {
+      display: flex; gap: .85rem; padding: 1rem 0;
+      font-size: .87rem; color: var(--ink-soft); line-height: 1.6;
+    }
+    .excerpt-text {
+      font-size: .92rem; color: var(--ink-soft); line-height: 1.8;
+      border-left: 3px solid var(--rust); padding-left: 1.1rem; font-style: italic;
+    }
+
+    /* ── Citation modal ── */
+    .cite-backdrop {
+      display: none; position: fixed; inset: 0; z-index: 500;
+      background: rgba(28,20,16,.55); backdrop-filter: blur(3px);
+      align-items: center; justify-content: center;
+    }
+    .cite-backdrop.open { display: flex; }
+
+    .cite-modal {
+      background: var(--paper);
+      border: 1px solid var(--border);
+      border-top: 3px solid var(--rust);
+      width: 100%; max-width: 560px;
+      margin: 1.5rem;
+      box-shadow: 0 20px 60px rgba(28,20,16,.25);
+      animation: modalIn .2s ease;
+    }
+    @keyframes modalIn {
+      from { opacity:0; transform:translateY(-10px); }
+      to   { opacity:1; transform:translateY(0); }
+    }
+    .cite-modal__header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 1.25rem;
+      border-bottom: 1px solid var(--border);
+      background: var(--sand);
+    }
+    .cite-modal__header h3 {
+      font-family: var(--font-m); font-size: .72rem;
+      letter-spacing: .04em; color: var(--ink-soft);
+    }
+    .cite-modal__close {
+      background: none; border: none; cursor: pointer;
+      font-size: 1.1rem; color: var(--muted); transition: color .15s; line-height:1;
+    }
+    .cite-modal__close:hover { color: var(--rust); }
+    .cite-modal__body { padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem; }
+    .cite-modal__doc-title {
+      font-family: var(--font-d); font-size: 1rem; font-weight: 600;
+      color: var(--ink); padding-bottom: .75rem; border-bottom: 1px solid var(--border);
+    }
+
+    /* Each citation row */
+    .cite-row { display: flex; flex-direction: column; gap: .4rem; }
+    .cite-row__label {
+      font-family: var(--font-m); font-size: .68rem;
+      letter-spacing: .04em; color: var(--muted);
+    }
+    .cite-row__text {
+      font-family: var(--font-m); font-size: .78rem; line-height: 1.65;
+      color: var(--ink-soft); background: var(--cream);
+      padding: .65rem .75rem; border: 1px solid var(--border);
+      user-select: all; flex: 1;
+    }
+    .cite-row__inner { display: flex; gap: .5rem; align-items: stretch; }
+    .cite-copy {
+      font-family: var(--font-b); font-size: .75rem; font-weight: 600;
+      padding: 0 .85rem; cursor: pointer; white-space: nowrap;
+      background: transparent; border: 1.5px solid var(--border);
+      color: var(--ink-soft); transition: all .18s; border-radius: 2px; flex-shrink: 0;
+    }
+    .cite-copy:hover { background: var(--rust); color: var(--white); border-color: var(--rust); }
+    .cite-copy.copied { background: #1a5c2a; color: var(--white); border-color: #1a5c2a; }
+
+    @media (max-width: 900px) { .doc-layout { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+<script src="shell.js"></script>
+
+<main>
+
+  <div class="page-hero">
+    <div class="container">
+      <a href="archive.html" style="font-family:var(--font-m); font-size:.72rem; letter-spacing:.04em; color:#9a8e86;">← Back to Archive</a>
+      <p style="color:#9a8e86; font-size:.88rem; margin-top:.25rem;">Document View</p>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="doc-layout">
+
+      <div>
+        <h1 class="doc-title">[Document Title]</h1>
+        <p class="doc-author">[Author Name(s)]</p>
+
+        <div class="accordion open" id="acc-abstract" style="margin-bottom:1.25rem;">
+          <button class="accordion__trigger" onclick="toggleAcc('acc-abstract')">
+            Abstract <span class="accordion__arrow">▼</span>
+          </button>
+          <div class="accordion__body">
+            <p style="font-size:.92rem; color:var(--ink-soft); line-height:1.8;">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum gravida ut mi sit amet tristique. Morbi aliquam lectus eget pharetra mattis. Suspendisse potenti. Pellentesque risus mauris, sagittis eget eleifend nec, maximus eu mauris. Nunc vehicula, leo ut viverra convallis, odio arcu consequat elit, sit amet bibendum lectus ligula vitae lorem. Nullam consectetur ac orci non gravida. Praesent id sem vitae dolor tincidunt convallis ac ac orci. Nullam nibh nibh, scelerisque eu dui ut, pretium facilisis arcu. Duis dignissim nisl ac justo malesuada, ut pretium felis iaculis. Integer a pulvinar diam, non porta odio. Vivamus pulvinar sodales ipsum vitae auctor. Nunc pharetra purus justo, non tempor ex pellentesque sit amet. Donec vitae enim et diam rhoncus interdum quis sit amet velit. Quisque dapibus ac nisi et accumsan.
+            </p>
+          </div>
+        </div>
+
+        <!-- Class A: PDF embed -->
+        <div class="pdf-placeholder">
+          [PDF embed — replace this div with:<br>
+          &lt;iframe class="pdf-embed" src="your-file.pdf"&gt;&lt;/iframe&gt;]
+        </div>
+
+        
+        <!-- Class B: excerpt + access notice 
+          <div class="access-notice">
+            <div>Full text not available for display. Access the full text at:
+            <a href="#">[External source link]</a>.</div>
+          </div>
+          <p class="excerpt-text" style="margin-top:1.25rem;">Short excerpt.</p>
+        -->
+
+        <!-- Class C: access notice only 
+          <div class="access-notice">
+            <div>Text contents cannot be displayed or downloaded. Visit:
+            <a href="#">[External source link]</a> to access this item.</div>
+          </div>
+        -->
+      </div>
+
+
+      <!-- ── SIDEBAR ── -->
+      <aside class="doc-sidebar">
+
+        <!-- Top action buttons: Cite + Actions -->
+        <div class="sidebar-actions">
+          <button class="btn btn--outline" onclick="openCiteModal()" title="Cite this document">
+            <span class="material-icons" style="font-size:1.1rem;">format_quote</span> Cite
+          </button>
+
+          <!-- Class A: show both -->
+          <a href="[your-file.pdf]" download class="btn btn--primary" title="Download PDF">
+            <span class="material-icons" style="font-size:1.1rem;">download</span> Download
+          </a>
+          <a href="[your-file.pdf]" target="_blank" class="btn btn--ghost" title="Open in new tab">
+            <span class="material-icons" style="font-size:1.1rem;">open_in_new</span>
+          </a>
+
+          <!-- Class B: comment out download, keep:
+          <a href="#" class="btn btn--outline" title="View at external source">
+            <span class="material-icons" style="font-size:1.1rem;">open_in_new</span> View source
+          </a>
+          -->
+
+          <!-- Class C: comment out both above, keep:
+          <a href="#" class="btn btn--ghost" title="View at external source">
+            <span class="material-icons" style="font-size:1.1rem;">open_in_new</span>
+          </a>
+          -->
+        </div>
+
+        <!-- Tags -->
+        <div class="sidebar-tags">
+          <span class="sidebar-tags__label">Tags</span>
+          <div class="tag-list">
+            <span class="tag">[Tag 1]</span>
+            <span class="tag">[Tag 2]</span>
+            <span class="tag">[Tag 3]</span>
+          </div>
+        </div>
+
+        <!-- Accordion group -->
+        <div>
+
+          <div class="accordion open" id="acc-info">
+            <button class="accordion__trigger" onclick="toggleAcc('acc-info')">
+              Info <span class="accordion__arrow">▼</span>
+            </button>
+            <div class="accordion__body" style="padding:0;">
+              <table class="detail-table">
+                <tr><td class="label">Year</td><td>Year</td></tr>
+                <tr><td class="label">Publisher</td><td>Publisher</td></tr>
+                <tr><td class="label">Location</td><td>Location</td></tr>
+                <tr><td class="label">Language</td><td>Language</td></tr>
+                <tr><td class="label">Pages</td><td>Pages</td></tr>
+                <tr><td class="label">Collection</td><td>Collection</td></tr>
+                <tr><td class="label">Format</td><td>Format</td></tr>
+                <tr><td class="label">Added</td><td>Added</td></tr>
+                <tr><td class="label">Source</td><td><a href="#">[Source institution]</a></td></tr>
+              </table>
+            </div>
+          </div>
+
+          <div class="accordion" id="acc-terms">
+            <button class="accordion__trigger" onclick="toggleAcc('acc-terms')">
+              Terms of Use &amp; Copyright <span class="accordion__arrow">▼</span>
+            </button>
+            <div class="accordion__body">
+              <!-- Class A -->
+              <p style="font-size:.85rem; color:var(--ink-soft); line-height:1.75;">
+                This item is in the <strong>public domain</strong> or its copyright has expired.
+                It may be freely accessed, reproduced, downloaded, and shared without restriction.
+                Please credit the Bastrop County Archive when citing or reproducing this item.
+              </p>
+              <!-- Class B — swap with this:
+              <p style="font-size:.85rem; color:var(--ink-soft); line-height:1.75;">
+                This item is <strong>under copyright</strong>. It may be searched and referenced
+                but the full text cannot be downloaded or reproduced. A short excerpt and metadata
+                are provided for research purposes. To access the full text, please visit the
+                rights holder or institution listed under Info.
+              </p>
+              -->
+              <!-- Class C — swap with this:
+              <p style="font-size:.85rem; color:var(--ink-soft); line-height:1.75;">
+                This item is <strong>under copyright</strong> and its text contents cannot be
+                displayed or downloaded from this archive. Only title, author, and metadata are
+                shown. To access the full text, contact the rights holder listed under Info.
+              </p>
+              -->
+            </div>
+          </div>
+
+        </div>
+      </aside>
+    </div>
+  </div>
+
+</main>
+
+
+<!-- ── CITATION MODAL ── -->
+<div class="cite-backdrop" id="citeBackdrop" onclick="closeCiteOnBackdrop(event)">
+  <div class="cite-modal">
+    <div class="cite-modal__header">
+      <h3>Cite this document</h3>
+      <button class="cite-modal__close" onclick="closeCiteModal()">✕</button>
+    </div>
+    <div class="cite-modal__body">
+
+      <p class="cite-modal__doc-title">[Document Title]</p>
+
+      <div class="cite-row">
+        <span class="cite-row__label">MLA</span>
+        <div class="cite-row__inner">
+          <div class="cite-row__text" id="cite-mla">
+            [Author Last], [First]. <em>[Title]</em>. [Publisher], [Year].
+          </div>
+          <button class="cite-copy" onclick="copyCite('cite-mla', this)">Copy</button>
+        </div>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite-row__label">APA</span>
+        <div class="cite-row__inner">
+          <div class="cite-row__text" id="cite-apa">
+            [Author Last], [Initial]. ([Year]). <em>[Title]</em>. [Publisher].
+          </div>
+          <button class="cite-copy" onclick="copyCite('cite-apa', this)">Copy</button>
+        </div>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite-row__label">Chicago</span>
+        <div class="cite-row__inner">
+          <div class="cite-row__text" id="cite-chicago">
+            [Author Last], [First]. <em>[Title]</em>. [Location]: [Publisher], [Year].
+          </div>
+          <button class="cite-copy" onclick="copyCite('cite-chicago', this)">Copy</button>
+        </div>
+      </div>
+
+      <div class="cite-row">
+        <span class="cite-row__label">Harvard</span>
+        <div class="cite-row__inner">
+          <div class="cite-row__text" id="cite-harvard">
+            [Author Last], [Initial] ([Year]) <em>[Title]</em>. [Location]: [Publisher].
+          </div>
+          <button class="cite-copy" onclick="copyCite('cite-harvard', this)">Copy</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+function toggleAcc(id) {
+  document.getElementById(id).classList.toggle('open');
+}
+
+function openCiteModal() {
+  document.getElementById('citeBackdrop').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCiteModal() {
+  document.getElementById('citeBackdrop').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function closeCiteOnBackdrop(e) {
+  if (e.target === document.getElementById('citeBackdrop')) closeCiteModal();
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeCiteModal(); });
+
+function copyCite(id, btn) {
+  const text = document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✓';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+</script>
+
+<script>renderShell('Archive');</script>
+</body>
+</html>
