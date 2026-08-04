@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>[Post Title] — Bastrop County Archive</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+
+    .post-layout {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 2.5rem 0 4rem;
+    }
+
+    /* ── Post header ── */
+    .post-meta {
+      font-family: var(--font-m); font-size: .72rem; letter-spacing: .04em;
+      color: var(--muted); margin-bottom: .75rem;
+    }
+    .post-title {
+      font-family: var(--font-d); font-size: 2.1rem; font-weight: 700;
+      color: var(--ink); line-height: 1.25; margin-bottom: .75rem;
+    }
+    .post-tags { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.75rem; }
+
+    /* ── Hero image ── */
+    .post-hero-img {
+      width: 100%; height: 360px; object-fit: cover;
+      border: 1px solid var(--border); margin-bottom: 2rem;
+    }
+    .post-hero-ph {
+      width: 100%; height: 360px; margin-bottom: 2rem;
+    }
+
+    /* ── Body copy ── */
+    .post-body {
+      font-size: 1rem; color: var(--ink-soft); line-height: 1.85;
+    }
+    .post-body p { margin-bottom: 1.4rem; }
+    .post-body h2 {
+      font-family: var(--font-d); font-size: 1.3rem; font-weight: 600;
+      color: var(--ink); margin: 2.2rem 0 1rem;
+    }
+    .post-body h3 {
+      font-family: var(--font-d); font-size: 1.1rem; font-weight: 600;
+      color: var(--ink); margin: 1.8rem 0 .85rem;
+    }
+    .post-body blockquote {
+      border-left: 3px solid var(--rust); padding-left: 1.1rem;
+      font-style: italic; color: var(--ink-soft); margin: 1.75rem 0;
+    }
+    .post-body img {
+      width: 100%; border: 1px solid var(--border); margin: 1.75rem 0;
+    }
+    .post-body ul, .post-body ol { margin: 0 0 1.4rem 1.3rem; }
+    .post-body li { margin-bottom: .5rem; }
+
+    /* ── Author / footer of post ── */
+    .post-divider { border: none; border-top: 1px solid var(--border); margin: 2.75rem 0; }
+    .post-author-block {
+      display: flex; align-items: center; gap: 1rem; margin-bottom: 2.75rem;
+    }
+    .post-author-img {
+      width: 52px; height: 52px; border-radius: 50%; object-fit: cover;
+      background: var(--sand); flex-shrink: 0;
+    }
+    .post-author-name { font-family: var(--font-b); font-weight: 600; color: var(--ink); font-size: .92rem; }
+    .post-author-role { font-family: var(--font-m); font-size: .72rem; color: var(--muted); letter-spacing: .03em; margin-top: .15rem; }
+
+    /* ── More posts ── */
+    .more-posts-heading {
+      font-family: var(--font-d); font-size: 1.15rem; font-weight: 600;
+      color: var(--ink); margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 640px) {
+      .post-title { font-size: 1.6rem; }
+      .post-hero-img, .post-hero-ph { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+<main>
+
+  <div class="container">
+    <a href="blog.html" class="btn btn--ghost btn--sm" style="margin-top:2rem;">← Back to Blog</a>
+    <article class="post-layout">
+
+      <p class="post-meta">Date · Author Name</p>
+      <h1 class="post-title">Post Title</h1>
+      <div class="post-tags">
+        <span class="tag">Category tag</span>
+        <span class="tag">Tag 2</span>
+      </div>
+
+      <!-- Hero image — replace with <img class="post-hero-img" src="your-image.jpg" alt="[description]"> -->
+      <div class="post-hero-ph ph">Post hero image — ~1200×600px</div>
+
+      <div class="post-body">
+        <p>
+          Opening paragraph
+        </p>
+        <p>
+          Supporting paragraph
+        </p>
+
+        <h2>Subheading</h2>
+        <p>
+          Body paragraph under this subheading.
+        </p>
+        <blockquote>
+          Optional pull quote or excerpt from a source document.
+        </blockquote>
+        <p>
+          Body paragraph continuing the discussion.
+        </p>
+
+        <h2>Subheading</h2>
+        <p>
+          Closing paragraph — wrap up, and optionally point readers to related archive material.
+        </p>
+      </div>
+
+      <hr class="post-divider">
+
+      <!-- Author block — optional, delete if not needed -->
+      <div class="post-author-block">
+        <img class="post-author-img" src="author-photo.jpg" alt="[Author Name]">
+        <div>
+          <div class="post-author-name">Author Name</div>
+          <div class="post-author-role">Author role / affiliation</div>
+        </div>
+      </div>
+
+    </article>
+
+    <!-- ── MORE FROM THE BLOG ── -->
+    <section class="home-section" style="padding-top:0;">
+      <h3 class="more-posts-heading">More from the Blog</h3>
+      <div class="blog-grid">
+
+        <article class="blog-card">
+          <div class="blog-card__img-ph ph">Post image — ~600×175px</div>
+          <div class="blog-card__body">
+            <p class="blog-card__meta">Date · Author</p>
+            <h2 class="blog-card__title"><a href="#">Post title</a></h2>
+            <p class="blog-card__excerpt">1–2 sentence description.</p>
+            <div class="blog-card__footer">
+              <span class="tag">Category tag</span>
+              <a href="#" class="btn btn--ghost btn--sm">Read more →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="blog-card">
+          <div class="blog-card__img-ph ph">Post image — ~600×175px</div>
+          <div class="blog-card__body">
+            <p class="blog-card__meta">Date · Author</p>
+            <h2 class="blog-card__title"><a href="#">Post title</a></h2>
+            <p class="blog-card__excerpt">1–2 sentence description.</p>
+            <div class="blog-card__footer">
+              <span class="tag">Category tag</span>
+              <a href="#" class="btn btn--ghost btn--sm">Read more →</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="blog-card">
+          <div class="blog-card__img-ph ph">Post image — ~600×175px</div>
+          <div class="blog-card__body">
+            <p class="blog-card__meta">Date · Author</p>
+            <h2 class="blog-card__title"><a href="#">Post title</a></h2>
+            <p class="blog-card__excerpt">1–2 sentence description.</p>
+            <div class="blog-card__footer">
+              <span class="tag">Category tag</span>
+              <a href="#" class="btn btn--ghost btn--sm">Read more →</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+  </div>
+
+</main>
+
+<script src="shell.js"></script>
+<script>renderShell('Blog');</script>
+</body>
+</html>

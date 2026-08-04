@@ -29,6 +29,8 @@ function renderShell(activePage) {
       <p>IRP Description.</p>
       <p style="margin-top:.6rem;font-size:.8rem;color:#6a5e58;font-style:italic">
         Gordon-White Building, UT Austin
+        210 W. 24th Street
+        Austin, TX 78705
       </p>
     </div>
     <div class="footer-col">
@@ -43,29 +45,20 @@ function renderShell(activePage) {
     <div class="footer-col">
       <h4>Resources</h4>
       <ul>
-        <li><a href="#">Census Data (1850–1950)</a></li>
-        <li><a href="#">Historical Texts</a></li>
-        <li><a href="#">Research Guides</a></li>
-        <li><a href="#">Contribute</a></li>
+        <li><a href="archive.html">Census Data (1850–1950)</a></li>
+        <li><a href="archive.html">Historical Texts</a></li>
       </ul>
     </div>
     <div class="footer-col">
       <h4>UT IRP</h4>
       <ul>
-        <li><a href="#">UT AADS link</a></li>
-        <li><a href="#">Contact Us</a></li>
-        <li><a href="#">Partners</a></li>
-        <li><a href="#">Citation Guide</a></li>
+        <li><a href="https://liberalarts.utexas.edu/aads/">UT AADS link</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
     <p>© 2025 Bastrop County Archive. All rights reserved.</p>
-    <nav>
-      <a href="#">Privacy</a>
-      <a href="#">Accessibility</a>
-      <a href="#">Terms of Use</a>
-    </nav>
   </div>
 </footer>`;
 
